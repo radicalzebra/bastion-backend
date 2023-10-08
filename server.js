@@ -1,15 +1,12 @@
-const express = require("express");
+const dotenvv = require("dotenv")
+dotenvv.config({ path:"./config.env" })
+const app = require("./app")
+const mongoose = require("mongoose")
 
-const app = express();
-
-app.get("/",(req,res)=>{
-   res.status(200).json({
-      message:"hello world",
-      ok:"true"
-   })
+mongoose.connect(process.env.DATABASE).then(con => {
+   console.log("DB connection successfull...")
 })
 
-const port = 3000
-app.listen(port,()=>{
-   console.log(`Listening.....`)
+app.listen(process.env.PORT,()=>{
+   console.log(`Server is listening...`)
 })
