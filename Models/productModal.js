@@ -79,7 +79,7 @@ const productSchema = new mongoose.Schema({
    //    required:[true,"Please provide a cover image for the product"]
    // }
 
-   // cart
+   //cart
    //reviews
 
 });

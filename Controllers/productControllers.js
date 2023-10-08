@@ -1,11 +1,14 @@
 const catchAsync = require("../Utilities/catchAsync")
 const Product = require("../Models/productModal");
+const apiFeatures = require("../Utilities/apiFeatures");
 
 
 //GET
 exports.getAllProducts = catchAsync(async (req,res) => {
 
-   const products = await Product.find();
+   const features = new apiFeatures(Product.find(),req.query).filter().sort().limitFields()
+
+   const products = await features.query
 
    res.status(200).json({
       status:"success",
