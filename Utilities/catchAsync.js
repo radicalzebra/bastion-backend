@@ -1,6 +1,6 @@
 const catchAsync = (fn) => {
-   return (req,res) => {
-      fn(req,res).catch(err => console.log(err))
+   return (req,res,next) => {
+      fn(req,res,next).catch(err => next(err))
    }
 }
 
