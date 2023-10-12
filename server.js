@@ -1,12 +1,21 @@
 const dotenvv = require("dotenv")
 dotenvv.config({ path:"./config.env" })
-const app = require("./app")
 const mongoose = require("mongoose")
+const app = require("./app")
 
 mongoose.connect(process.env.DATABASE).then(con => {
    console.log("DB connection successfull...")
 })
 
-app.listen(process.env.PORT,()=>{
+const server = app.listen(process.env.PORT,()=>{
    console.log(`Server is listening...`)
+})
+
+
+process.on("unhandledRejection" , (err) => {
+   console.log("UNHANDLED REJECTION 🔥🔥🔥. Shutting down...")
+   console.log(err.name,err.message)
+   server.close(() => {
+      process.exit(1)
+   })
 })
