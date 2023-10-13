@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
 
@@ -32,6 +33,13 @@ const userSchema = new mongoose.Schema({
      type:String,
      required : [true, "Please provide a password"],
      trim:true,
+     validate:{
+         validator:function(val) {
+            return this.password === val
+         },
+
+         message:"Passwords are not the same!"
+     }
    },
 
    phone : {
@@ -40,7 +48,8 @@ const userSchema = new mongoose.Schema({
    },
 
    gender: {
-      type: Date,
+      type: String,
+      required : [true, "Please provide your gender"],
       enum: {
          values:["man", "woman"],
          message:"Please enter valid gender"
@@ -54,7 +63,8 @@ const userSchema = new mongoose.Schema({
 
    role:{
       type:String,
-      enum:["admin","seller","user"]
+      enum:["admin","seller","user"],
+      default:"user"
    },
 
 
@@ -99,6 +109,19 @@ const userSchema = new mongoose.Schema({
    }
 
 });
+
+
+
+userSchema.pre("save", async function(next) {
+
+   if(!this.isModified("password")) next() 
+
+   this.password = await  bcrypt.hash(this.password,11)
+
+   this.passwordConfirm = undefined;
+
+   next();
+})
 
 const User = mongoose.model("Users",userSchema)
 
