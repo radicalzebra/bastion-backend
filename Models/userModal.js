@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema({
      }
    },
 
+
+   passwordChangedAt: Date,
+
    phone : {
       type:Number,
       validate:[validator.isMobilePhone, "Please enter a valid credit card number"]
@@ -129,6 +132,19 @@ userSchema.methods.correctPassword = async function (userPass,docPass) {
    
    return await bcrypt.compare(userPass,docPass);
 }
+
+
+userSchema.methods.changedPasswordAfter =  function (JWTTimestamp) {
+   
+   if(this.passwordChangedAt) {
+     const changedTimestamp = parseInt(this.passwordChangedAt.getTime()/1000,10);
+
+     return JWTTimestamp < changedTimestamp;
+   }
+   
+   return false
+}
+
 
 const User = mongoose.model("Users",userSchema)
 

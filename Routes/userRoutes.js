@@ -12,8 +12,8 @@ router.post("/login",authController.login);
 
 
 
-router.route("/").get(userControllers.getAllUsers)
-router.route("/:id").get(userControllers.getUser)
+router.route("/").get(authController.protect,authController.restrictTo("admin"),userControllers.getAllUsers)
+router.route("/:id").get(authController.protect,authController.restrictTo("admin"),userControllers.getUser)
 
 
 module.exports = router
