@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
 
@@ -45,6 +46,8 @@ const userSchema = new mongoose.Schema({
 
 
    passwordChangedAt: Date,
+   passwordResetToken: String,
+   passwordResetTokenExpires: Date,
 
    phone : {
       type:Number,
@@ -110,6 +113,12 @@ const userSchema = new mongoose.Schema({
    pincode : {
       type:Number,
       validate:[validator.isPostalCode, "Please enter a valid pincode"]
+   },
+
+
+   active : {
+      type : Boolean,
+      default: true
    }
 
 });
@@ -128,8 +137,15 @@ userSchema.pre("save", async function(next) {
 })
 
 
+userSchema.pre(/^find/, function(next) {
+   this.find({active:{$ne:false}});
+
+   next();
+})
+
+
 userSchema.methods.correctPassword = async function (userPass,docPass) {
-   
+
    return await bcrypt.compare(userPass,docPass);
 }
 
@@ -143,6 +159,24 @@ userSchema.methods.changedPasswordAfter =  function (JWTTimestamp) {
    }
    
    return false
+}
+
+
+userSchema.methods.createPasswordResetToken =  function () {
+
+   const resetToken = crypto.randomBytes(32).toString("hex");
+
+
+   this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+   this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+   return resetToken;
+}
+
+
+userSchema.methods.checkPwd = async function(inputPwd, orgPwd) {
+   return await bcrypt.compare(inputPwd,orgPwd);
 }
 
 
