@@ -23,7 +23,9 @@ exports.getAllProducts = catchAsync(async (req,res,next) => {
 
 exports.getProduct = catchAsync(async (req,res,next) => {
 
-   const product = await Product.findById(req.params.id);
+   const product = await Product.findById(req.params.id).populate({
+      path:"reviews"
+   });
 
    if(!product) return next(new MyError("No product found with that ID",404))
 
@@ -39,6 +41,8 @@ exports.getProduct = catchAsync(async (req,res,next) => {
 
 //POST
 exports.createProduct = catchAsync(async (req,res,next) => {
+
+   req.body.seller = req.user._id
 
    const product = await Product.create(req.body)
 

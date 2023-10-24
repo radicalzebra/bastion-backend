@@ -24,7 +24,7 @@ exports.getAllUsers = catchAsync(async (req,res,next) => {
 
 exports.getUser = catchAsync(async (req,res,next) => {
 
-   const user = await User.findById(req.params.id);
+   const user = await User.findById(req.params.id).populate("reviews");
 
    if(!user) return next(new MyError("No user found with that ID",404))
 

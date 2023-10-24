@@ -68,10 +68,28 @@ const userSchema = new mongoose.Schema({
       default:"defaultUserPic.jpg"
    },
 
+   birthday:Date,
+
    role:{
       type:String,
       enum:["admin","seller","user"],
       default:"user"
+   },
+
+   sellerRating: {
+      type:Number,
+      validate:{
+         validator:function(val) {
+            return this.role === "seller" && this.val <= 5
+         },
+
+         message:"User must be seller & the rating should be less than or equal to 5"
+      }
+   },
+
+   createdAt: {
+      type:Date,
+      default:Date.now()
    },
 
 
@@ -95,7 +113,7 @@ const userSchema = new mongoose.Schema({
      validate:[validator.isCreditCard, "Please enter a valid credit card number"]
    },
 
-   cardCvv : Number,
+   Cvv : Number,
 
 
 
@@ -121,7 +139,18 @@ const userSchema = new mongoose.Schema({
       default: true
    }
 
+},{
+   toJSON:{virtuals:true},
+   toObject:{virtuals:true}
 });
+
+
+//virtual populate
+userSchema.virtual("reviews",{
+   ref:"Reviews",
+   foreignField: "user",
+   localField: "_id"
+})
 
 
 

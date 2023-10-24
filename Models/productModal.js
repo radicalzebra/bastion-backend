@@ -107,13 +107,37 @@ const productSchema = new mongoose.Schema({
       // required:[true,"Please provide a cover image for the product"]
    },
 
-   // seller:
+   seller: {
+      type:mongoose.Schema.ObjectId,
+      ref:"Users"
+   }
 
-   //cart
-   //reviews
+   
+   // reviews:{
 
+   // }
+
+},{
+   toJSON:{virtuals:true},
+   toObject:{virtuals:true}
 });
 
+//virtual populate
+productSchema.virtual("reviews",{
+   ref:"Reviews",
+   foreignField: "product",
+   localField: "_id"
+})
+
+
+productSchema.pre(/^find/, function(next) {
+   this.populate({
+      path:"seller",
+      select:"username email phone photo"
+   })
+
+   next()
+})
 
 const Product = mongoose.model("Products", productSchema);
 
