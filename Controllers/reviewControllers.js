@@ -2,6 +2,7 @@ const Review = require("../Models/reviewModal");
 const catchAsync = require("../Utilities/catchAsync");
 const ApiFeatures = require("../Utilities/ApiFeatures");
 const MyError = require("../Utilities/MyError");
+const Product = require("../Models/productModal"); 
 
 
 //GET
@@ -27,6 +28,12 @@ exports.getAllReviews = catchAsync(async (req,res,next) => {
 //POST
 exports.createReview = catchAsync(async (req,res,next) => {
 
+   const product = await Product.findById(req.params.productId)
+
+   if(product.seller._id.equals(req.user._id)) throw next(new MyError("You cannot review your own product",400))
+
+   console.log()
+
    req.body.user = req.user._id
    req.body.product = req.params.productId
 
@@ -45,8 +52,11 @@ exports.createReview = catchAsync(async (req,res,next) => {
 exports.checkReviewer = catchAsync(async(req,res,next)=>{
 
 
-   const check = await Review.find({product: req.params.productId});
-   if(!req.user._id.equals(check[0].user._id)) throw next(new MyError("You are not authorized to do this action", 401)); //equals() becaiuse we are comparing object references
+   const check = await Review.find({product: req.params.productId , user:req.user._id, _id:req.params.reviewId});
+    if(!check) throw next(new MyError("You are not authorized to do this action", 401)); 
+   
+   // if(!req.user._id.equals(check[check.length-1].user._id)) throw next(new MyError("You are not authorized to do this action", 401)); //equals() becaiuse we are comparing object references
+
 
    next();
 });

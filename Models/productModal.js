@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const User = require("./userModal")
 
 const productSchema = new mongoose.Schema({
    name: {
@@ -23,6 +24,12 @@ const productSchema = new mongoose.Schema({
       default: 0,
       min: [0,"A product must have minimum rating of 0"],
       max: [5,"A product must have maximum rating of 5"],
+      set: val => Math.round(val*10)/10 
+   },
+
+   ratingQuantity : {
+      type:Number,
+      default:0
    },
 
    price: {
@@ -112,15 +119,14 @@ const productSchema = new mongoose.Schema({
       ref:"Users"
    }
 
-   
-   // reviews:{
-
-   // }
-
 },{
    toJSON:{virtuals:true},
    toObject:{virtuals:true}
 });
+
+
+//indexing
+productSchema.index({price: 1,rating:-1})
 
 //virtual populate
 productSchema.virtual("reviews",{
@@ -133,11 +139,62 @@ productSchema.virtual("reviews",{
 productSchema.pre(/^find/, function(next) {
    this.populate({
       path:"seller",
-      select:"username email phone photo"
+      select:"username email phone photo sellerRating"
    })
 
    next()
 })
+
+
+
+productSchema.statics.calcSellerRating = async function(sellerId){
+
+
+   const stats = await this.aggregate([
+      {
+         $match:{seller:sellerId}
+      },
+
+      {
+         $group:{
+            _id:"$seller",
+            num:{$sum:1},
+            avgRating:{$avg:"$rating"}
+         }
+      }
+   ]);
+
+
+   // console.log(stats)
+
+   await User.findByIdAndUpdate(sellerId,{
+      sellerRating:stats[0].avgRating
+   });
+   
+};
+
+
+
+productSchema.post("findOneAndUpdate", function(docs,next){
+
+   // console.log(docs.seller,"lll")
+
+   docs.constructor.calcSellerRating(docs.seller._id);
+
+   next();
+});
+
+
+
+productSchema.post("findOneAndDelete", function(docs,next){
+ 
+   docs.constructor.calcSellerRating(docs.seller._id);
+
+   next();
+});
+
+
+
 
 const Product = mongoose.model("Products", productSchema);
 

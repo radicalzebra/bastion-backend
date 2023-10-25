@@ -80,11 +80,12 @@ const userSchema = new mongoose.Schema({
       type:Number,
       validate:{
          validator:function(val) {
-            return this.role === "seller" && this.val <= 5
+            return this.val <= 5
          },
 
          message:"User must be seller & the rating should be less than or equal to 5"
-      }
+      },
+      set: val => Math.round(val*10)/10 
    },
 
    createdAt: {
@@ -93,7 +94,6 @@ const userSchema = new mongoose.Schema({
    },
 
 
-   //products
    //cart
    // purchased
    //notifications
@@ -151,6 +151,13 @@ userSchema.virtual("reviews",{
    foreignField: "user",
    localField: "_id"
 })
+
+userSchema.virtual("products",{
+   ref:"Products",
+   foreignField: "seller",
+   localField: "_id"
+})
+
 
 
 

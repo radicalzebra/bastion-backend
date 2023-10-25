@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const Product = require("./productModal")
 
 
 const reviewSchema = new mongoose.Schema({
@@ -13,7 +14,8 @@ const reviewSchema = new mongoose.Schema({
       type:Number,
       min:1,
       max:5,
-      required:[true,"A review must have a rating"]
+      required:[true,"A review must have a rating"],
+      set: val => Math.round(val*10)/10 
    },
 
    createdAt:{
@@ -36,6 +38,9 @@ const reviewSchema = new mongoose.Schema({
 })
 
 
+reviewSchema.index({user: 1, product: 1}, {unique:true})
+
+
 reviewSchema.pre(/^find/, function(next) {
    // this.populate({
    //    path:"product",
@@ -48,6 +53,48 @@ reviewSchema.pre(/^find/, function(next) {
 
    next()
 })
+
+
+reviewSchema.statics.calcAvgRatings = async function(productId) {
+ 
+   const stats = await this.aggregate([
+      {
+         $match : {product : productId}
+      }, 
+
+      {
+         $group : {
+            _id:"$product",
+            numRating: {$sum : 1},
+            avgRating: {$avg: "$rating"}
+         }
+      }
+   ])
+
+   await Product.findByIdAndUpdate(productId,{
+      rating:stats[0].avgRating ,
+      ratingQuantity : stats[0].numRating
+   },{
+      new:true,
+      runValidators:true
+   })
+}
+
+
+reviewSchema.post("save",function(doc,next){
+   this.constructor.calcAvgRatings(this.product)
+   next()
+})
+
+reviewSchema.post("findOneAndUpdate", function(docs,next){
+   docs.constructor.calcAvgRatings(docs.product._id);
+   next();
+});
+
+reviewSchema.post("findOneAndDelete", function(docs,next){
+   docs.constructor.calcAvgRatings(docs.product._id);
+   next();
+});
 
 
 

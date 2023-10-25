@@ -6,11 +6,6 @@ const authControllers = require("../Controllers/authControllers")
 
 const router = express.Router({mergeParams:true});
 
-router.use((req,res,next) => {
-      console.log("yo3") 
-      next()
-})
-
 router.route("/")
       .get(reviewControllers.getAllReviews)
       .post(authControllers.protect,authControllers.restrictTo("user","seller"),reviewControllers.createReview)
