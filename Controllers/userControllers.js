@@ -2,9 +2,57 @@ const User = require("../Models/userModal");
 const catchAsync = require("../Utilities/catchAsync");
 const ApiFeatures = require("../Utilities/ApiFeatures");
 const MyError = require("../Utilities/MyError");
+const multer = require("multer");
+const sharp = require("sharp");
+
+// const multerStorage = multer.diskStorage({
+//    destination:(req,file,cb) => {
+//       cb(null,"Public/Images/Users")
+//    },
+
+//    filename:(req,file,cb) => {
+//       const ext = file.mimetype.split("/")[1]
+//       cb(null,`user-${req.user.id}-${Date.now()}.${ext}`)
+//    }
+// })
+
+const multerStorage = multer.memoryStorage()
+
+const multerFilter = (req,file,cb) => {
+
+   if(file.mimetype.startsWith("image")) return  cb(null,true)
+   return cb(new MyError("Not an image! Please upload only images.",400),false)
+}
+
+const upload = multer({
+   storage: multerStorage,
+   fileFilter:multerFilter
+})
 
 
-//GET
+exports.resizeUserPhoto =catchAsync(async (req,res,next) => {
+
+   if (!req.file) return next();
+
+
+   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+
+
+   await sharp(req.file.buffer).resize(500,500)
+                               .toFormat("jpeg")
+                               .jpeg({quality:90})
+                               .toFile(`Public/Images/Users/${req.file.filename}`)
+
+
+   next()
+
+
+})
+
+
+exports.uploadUserPhoto = upload.single("photo")
+
+
 exports.getAllUsers = catchAsync(async (req,res,next) => {
 
    const features = new ApiFeatures(User.find(),req.query).filter().sort().limitFields()
@@ -51,6 +99,9 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
   if(req.body.password || req.body.passwordConfirm) throw next(new MyError("This route is not defined for password updates, please use /update-password route", 400));
   if(req.body.role) throw next(new MyError("You cannot update your role", 400));
 
+
+  if(req.file) req.body.photo = req.file.filename
+
   //2:update user document & filter unwanted fields
   const user = await User.findByIdAndUpdate(req.user._id, req.body ,{
     runValidators:true,
@@ -77,3 +128,5 @@ exports.deleteMe = catchAsync(async (req,res,next)=>{
      data:null
   });
 });
+
+

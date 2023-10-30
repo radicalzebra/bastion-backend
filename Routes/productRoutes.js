@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route("/")
 .get(productControllers.getAllProducts)
-.post(authControllers.protect,authControllers.restrictTo("seller"),productControllers.createProduct)
+.post(authControllers.protect,authControllers.restrictTo("seller"),productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.createProduct)
 
 
 router.use("/:productId/reviews", reviewRouter)
@@ -17,8 +17,8 @@ router.use("/:productId/reviews", reviewRouter)
 
 router.route("/:id")
 .get(productControllers.getProduct)
-.patch(productControllers.updateProduct)
-.delete(productControllers.deleteProduct)
+.patch(authControllers.protect,authControllers.restrictTo("seller"),productControllers.check,productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.updateProduct)
+.delete(authControllers.protect,productControllers.check,productControllers.deleteProduct)
 
 
 module.exports = router

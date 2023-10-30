@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema({
 
    photo : {
       type: String,
-      default:"defaultUserPic.jpg"
+      default:"default.jpg"
    },
 
    birthday:Date,
