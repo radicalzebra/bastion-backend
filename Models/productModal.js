@@ -94,11 +94,6 @@ const productSchema = new mongoose.Schema({
       default: Date.now()
    },
 
-   sold : {
-      type:Number,
-      default: 0
-   },
-
    inStock: {
       type: Boolean,
       default: true
@@ -134,6 +129,14 @@ productSchema.virtual("reviews",{
    foreignField: "product",
    localField: "_id"
 })
+
+productSchema.virtual("sold",{
+   ref:"Purchases",
+   foreignField: "product",
+   localField: "_id"
+})
+
+
 
 
 productSchema.pre(/^find/, function(next) {

@@ -79,6 +79,9 @@ exports.getProduct = catchAsync(async (req,res,next) => {
 
    const product = await Product.findById(req.params.id).populate({
       path:"reviews"
+   }).populate({
+      path:"sold",
+      select:"id"
    });
 
    if(!product) return next(new MyError("No product found with that ID",404))

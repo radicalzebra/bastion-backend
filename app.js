@@ -4,7 +4,7 @@ const globalErrorhandler = require("./Utilities/globalErrorHandler");
 const MyError = require("./Utilities/MyError");
 const productRouter = require("./Routes/productRoutes");
 const userRouter = require("./Routes/userRoutes");
-// const reviewRouter = require("./Routes/reviewRoutes");
+const purchaseRouter = require("./Routes/purchaseRoutes");
 const cookieParser = require(`cookie-parser`);
 const helmet = require("helmet");
 const xss = require("xss-clean");
@@ -28,7 +28,7 @@ app.use(xss());
 //Routes
 app.use("/bastion/api/users", userRouter);
 app.use("/bastion/api/products", productRouter); 
-// app.use("/bastion/api/reviews", reviewRouter);
+app.use("/bastion/api/purchases", purchaseRouter);
 
 
 app.all("*", (req,res,next)=> {

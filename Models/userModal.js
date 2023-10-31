@@ -162,6 +162,13 @@ userSchema.virtual("products",{
 })
 
 
+userSchema.virtual("purchases",{
+   ref:"Purchases",
+   foreignField: "user",
+   localField: "_id"
+})
+
+
 
 
 userSchema.pre("save", async function(next) {
@@ -187,7 +194,7 @@ userSchema.pre("findOne", function(next) {
    this.populate("reviews").populate("products").populate({
       path:"cart",
       select:"coverImage name price"
-   });
+   }).populate("purchases");
 
    next();
 })
