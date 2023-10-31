@@ -72,7 +72,7 @@ exports.getAllUsers = catchAsync(async (req,res,next) => {
 
 exports.getUser = catchAsync(async (req,res,next) => {
 
-   const user = await User.findById(req.params.id).populate("reviews").populate("products");
+   const user = await User.findById(req.params.id);
 
    if(!user) return next(new MyError("No user found with that ID",404))
 
@@ -97,6 +97,7 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
 
   //1:Create error if user posts password
   if(req.body.password || req.body.passwordConfirm) throw next(new MyError("This route is not defined for password updates, please use /update-password route", 400));
+  if(req.body.cart) throw next(new MyError("This route is not defined for cart updates, please use /updateCart route", 400));
   if(req.body.role) throw next(new MyError("You cannot update your role", 400));
 
 
@@ -117,6 +118,23 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
     }
   });
 });
+
+
+
+exports.updateCart = catchAsync(async (req,res,next) => {
+
+   const user = await User.findByIdAndUpdate(req.user._id,{cart:req.body.cart},{
+    runValidators:true,
+    new:true
+   })
+
+  res.status(200).json({
+    status:"succcess",
+    data:{
+      user
+    }
+  });
+})
 
 
 exports.deleteMe = catchAsync(async (req,res,next)=>{

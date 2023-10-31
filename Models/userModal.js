@@ -94,7 +94,10 @@ const userSchema = new mongoose.Schema({
    },
 
 
-   //cart
+   cart:[{
+      type:mongoose.Schema.ObjectId,
+      ref:"Products"
+   }],
    // purchased
    //notifications
 
@@ -175,6 +178,16 @@ userSchema.pre("save", async function(next) {
 
 userSchema.pre(/^find/, function(next) {
    this.find({active:{$ne:false}});
+
+   next();
+})
+
+
+userSchema.pre("findOne", function(next) {
+   this.populate("reviews").populate("products").populate({
+      path:"cart",
+      select:"coverImage name price"
+   });
 
    next();
 })
