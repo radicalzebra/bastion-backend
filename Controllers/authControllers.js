@@ -24,12 +24,10 @@ const createSendToken = (user,statusCode,res) => {
       secure: false,
       httpOnly: true
    }
-  
-   console.log(process.env.NODE_ENV)
 
    if(process.env.NODE_ENV === "production") cookieOptions.secure = true
 
-   console.log(cookieOptions)
+
 
    res.cookie("jwt",token);
 
@@ -78,11 +76,14 @@ exports.login = catchAsync(async (req,res,next) => {
 exports.protect = catchAsync(async (req,res,next) => {
 
    //Getting token and heck if it's there
-   let token;
-   if(req.cookie.jwt) {
-      console.log(req.cookie)
-      
-      token = req.cookies.jwt
+   // let token;
+   // if(req.cookies.jwt) {
+   //    token = req.cookies.jwt
+   // };
+
+  let token;
+   if(req.cookie) {
+      token = req.cookie.split("=")[1]
    };
 
    if(!token) next(new MyError("Please login to get access!",401));
