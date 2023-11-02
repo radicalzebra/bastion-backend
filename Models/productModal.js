@@ -102,12 +102,12 @@ const productSchema = new mongoose.Schema({
 
    images:{
       type:[String],
-      required:[true,"Please provide images for the product"]
+      // required:[true,"Please provide images for the product"]
    },
 
    coverImage:{
       type:String,
-      required:[true,"Please provide a cover image for the product"]
+      // required:[true,"Please provide a cover image for the product"]
    },
 
    seller: {
