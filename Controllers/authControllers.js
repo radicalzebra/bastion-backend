@@ -75,16 +75,12 @@ exports.login = catchAsync(async (req,res,next) => {
 
 exports.protect = catchAsync(async (req,res,next) => {
 
-   //Getting token and heck if it's there
-   // let token;
-   // if(req.cookies.jwt) {
-   //    token = req.cookies.jwt
-   // };
-
-  let token;
-   if(req.cookie) {
-      token = req.cookie.split("=")[1]
+   // Getting token and heck if it's there
+   let token;
+   if(req.cookies.jwt) {
+      token = req.cookies.jwt
    };
+
 
    if(!token) next(new MyError("Please login to get access!",401));
 
