@@ -16,7 +16,8 @@ const productSchema = new mongoose.Schema({
    consumer : {
       type: String,
       required : [true, "Please provide the type of consumer for the product"],
-      enum : ["men", "women" , "kids"]
+      enum : ["men", "women" , "kids"],
+      lowercase:true
    },
 
    rating: {
@@ -52,7 +53,7 @@ const productSchema = new mongoose.Schema({
       type:String,
       required:[true,"Please provide a suitable season for the product"],
       enum:{
-         values:["rainy","winter","summer","all"],
+         values:["rainy","winter","summer"],
          message:"Season must be rainy, winter , summer or all"
       }
    },
