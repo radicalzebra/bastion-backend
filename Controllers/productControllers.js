@@ -32,11 +32,12 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
 
 
    // coverImage
-   req.body.coverImage  = `product-${req.params.id}-${Date.now()}-cover.jpeg`
+   const filename = `product-${req.params.id}-${Date.now()}-cover.jpeg`
    await sharp(req.files.coverImage[0].buffer).resize(2000,1500)
                                .toFormat("jpeg")
                                .jpeg({quality:90})
-                               .toFile(`Public/Images/Products/${req.body.coverImage}`)
+                               .toFile(`Public/Images/Products/${filename}`)
+   req.body.coverImage = `${req.protocol}://${req.get("host")}/Images/Products/${filename}`
 
    
    //Images
@@ -48,7 +49,7 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
                                .jpeg({quality:90})
                                .toFile(`Public/Images/Products/${filename}`)
       
-      req.body.images.push(filename)
+      req.body.images.push(`${req.protocol}://${req.get("host")}/Images/Products/${filename}`)
    }))
 
 

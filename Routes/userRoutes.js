@@ -17,6 +17,7 @@ router.patch("/updateMe",authController.protect,userControllers.uploadUserPhoto,
 router.delete("/deleteMe",authController.protect,userControllers.deleteMe);
 router.put("/updateCart",authController.protect,userControllers.updateCart);
 router.get("/me",authController.protect,userControllers.getMe,userControllers.getUser)
+// router.get("/images/:img",userControllers.getImage)
 
 
 

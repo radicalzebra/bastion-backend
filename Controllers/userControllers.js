@@ -5,16 +5,6 @@ const MyError = require("../Utilities/MyError");
 const multer = require("multer");
 const sharp = require("sharp");
 
-// const multerStorage = multer.diskStorage({
-//    destination:(req,file,cb) => {
-//       cb(null,"Public/Images/Users")
-//    },
-
-//    filename:(req,file,cb) => {
-//       const ext = file.mimetype.split("/")[1]
-//       cb(null,`user-${req.user.id}-${Date.now()}.${ext}`)
-//    }
-// })
 
 const multerStorage = multer.memoryStorage()
 
@@ -101,7 +91,7 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
   if(req.body.role) throw next(new MyError("You cannot update your role", 400));
 
 
-  if(req.file) req.body.photo = req.file.filename
+  if(req.file) req.body.photo = `${req.protocol}://${req.get("host")}/Images/Users/${req.file.filename}`
 
   //2:update user document & filter unwanted fields
   const user = await User.findByIdAndUpdate(req.user._id, req.body ,{

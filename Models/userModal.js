@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
 
    phone : {
       type:Number,
-      validate:[validator.isMobilePhone, "Please enter a valid credit card number"]
+      // validate:[validator.isMobilePhone, "Please enter a valid credit card number"]
    },
 
    gender: {
@@ -113,7 +113,7 @@ const userSchema = new mongoose.Schema({
 
    cardNumber : {
      type: Number,
-     validate:[validator.isCreditCard, "Please enter a valid credit card number"]
+   //   validate:[validator.isCreditCard, "Please enter a valid credit card number"]
    },
 
    Cvv : Number,
@@ -133,7 +133,7 @@ const userSchema = new mongoose.Schema({
 
    pincode : {
       type:Number,
-      validate:[validator.isPostalCode, "Please enter a valid pincode"]
+      // validate:[validator.isPostalCode, "Please enter a valid pincode"]
    },
 
 

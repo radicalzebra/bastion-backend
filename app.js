@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const path = require("path");
 const globalErrorhandler = require("./Utilities/globalErrorHandler");
 const MyError = require("./Utilities/MyError");
 const productRouter = require("./Routes/productRoutes");
@@ -14,10 +15,19 @@ const mongoSanitize = require("express-mongo-sanitize");
 const app = express();
 
 
+// app.use((req,res,next)=> {
+//    // console.log(req)
+//    console.log(`${req.protocol}://${req.get("host")}${req.url}`)
+//    next()
+// })
+
 //Middlewares
 if(process.env.NODE_ENV === "development") {
    app.use(morgan("dev"));
 }
+
+app.use(express.static(path.join(__dirname,"Public"))); 
+
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
