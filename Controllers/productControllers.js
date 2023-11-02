@@ -118,7 +118,7 @@ exports.check = catchAsync(async(req,res,next) => {
 
    const product = await Product.findById(req.params.id);
 
-   if(!product.seller._id.equals(req.user._id)) throw next("You are not authorized to do this action",401)
+   if(!product.seller._id.equals(req.user._id)) throw next(new MyError("You are not authorized to do this action",401))
 
    next()
 })
