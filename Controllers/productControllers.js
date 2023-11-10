@@ -4,6 +4,8 @@ const ApiFeatures = require("../Utilities/ApiFeatures");
 const MyError = require("../Utilities/MyError");
 const multer = require("multer");
 const sharp = require("sharp");
+const storage = require("../firebase")
+const { ref, uploadBytes , listAll, list, getDownloadURL} = require("firebase/storage")
 
 
 const multerStorage = multer.memoryStorage()
@@ -32,12 +34,26 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
 
 
    // coverImage
-   const filename = `product-${req.params.id}-${Date.now()}-cover.jpeg`
+   req.body.coverImage = `product-${req.params.id}-${Date.now()}-cover.jpeg`
    await sharp(req.files.coverImage[0].buffer).resize(2000,1500)
                                .toFormat("jpeg")
                                .jpeg({quality:90})
-                               .toFile(`Public/Images/Products/${filename}`)
-   req.body.coverImage = `${req.protocol}://${req.get("host")}/Images/Products/${filename}`
+
+   //upload to firebase 
+   const imageRef = ref(storage,`images/products/${req.body.coverImage}`)
+   await uploadBytes(imageRef,req.files.coverImage[0].buffer)
+
+   //get all product image urls from firebase
+   const listProductImagesRef = ref(storage,`images/products/`)
+   const storageResponse = await list(listProductImagesRef)
+   const imagesUrl = await Promise.all(storageResponse.items.map(async (item)=> {
+      return await getDownloadURL(item)
+   }))
+
+   //find current cover image and save image url to database
+   const coverImage = imagesUrl.find((el,i)=> el.includes(req.body.coverImage))
+   req.body.coverImage = coverImage
+ 
 
    
    //Images
@@ -47,9 +63,22 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
       await sharp(file.buffer).resize(2000,1500)
                                .toFormat("jpeg")
                                .jpeg({quality:90})
-                               .toFile(`Public/Images/Products/${filename}`)
-      
-      req.body.images.push(`${req.protocol}://${req.get("host")}/Images/Products/${filename}`)
+
+      //upload to firebase 
+      const imageRef = ref(storage,`images/products/${filename}`)
+      await uploadBytes(imageRef,file.buffer)
+
+      //get all product image urls from firebase
+      const listProductImagesRef = ref(storage,`images/products/`)
+      const storageResponse = await list(listProductImagesRef)
+      const imagesUrl = await Promise.all(storageResponse.items.map(async (item)=> {
+         return await getDownloadURL(item)
+      }))
+
+      //find current cover image and save image url to database
+      const productImage = imagesUrl.find((el,i)=> el.includes(filename))
+      req.body.images.push(productImage)
+ 
    }))
 
 

@@ -4,6 +4,8 @@ const ApiFeatures = require("../Utilities/ApiFeatures");
 const MyError = require("../Utilities/MyError");
 const multer = require("multer");
 const sharp = require("sharp");
+const storage = require("../firebase")
+const { ref, uploadBytes , listAll, list, getDownloadURL} = require("firebase/storage")
 
 
 const multerStorage = multer.memoryStorage()
@@ -20,22 +22,40 @@ const upload = multer({
 })
 
 
-exports.resizeUserPhoto =catchAsync(async (req,res,next) => {
+exports.resizeUserPhoto = catchAsync(async (req,res,next) => {
 
    if (!req.file) return next();
 
 
-   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+   req.body.photo = `user-${req.user.id}-${Date.now()}.jpeg`
 
 
    await sharp(req.file.buffer).resize(500,500)
                                .toFormat("jpeg")
                                .jpeg({quality:90})
-                               .toFile(`Public/Images/Users/${req.file.filename}`)
+                              //  .toFile(`Public/Images/Users/${req.file.filename}`)
+
+
+   //upload to firebase                              
+   const imageRef = ref(storage,`images/users/${req.body.photo}`)
+   await uploadBytes(imageRef,req.file.buffer)
+
+
+   //get all all users' image urls from firebase
+   const listUserImagesRef = ref(storage,`images/users/`)
+   const storageResponse = await list(listUserImagesRef)
+   const imagesUrl = await Promise.all(storageResponse.items.map(async (item)=> {
+      return await getDownloadURL(item)
+   }))
+
+   //find current user image and save image url to database
+   const userImage = imagesUrl.find((el,i)=> el.includes(req.body.photo))
+   req.body.photo = userImage
+
+   
 
 
    next()
-
 
 })
 
@@ -90,8 +110,6 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
   if(req.body.cart) throw next(new MyError("This route is not defined for cart updates, please use /updateCart route", 400));
   if(req.body.role) throw next(new MyError("You cannot update your role", 400));
 
-
-  if(req.file) req.body.photo = `${req.protocol}://${req.get("host")}/Images/Users/${req.file.filename}`
 
   //2:update user document & filter unwanted fields
   const user = await User.findByIdAndUpdate(req.user._id, req.body ,{
