@@ -14,15 +14,20 @@ class ApiFeatures {
 
       //implementing so that values with undefined will be ignored
       Object.keys(queryObj).forEach(key => {
-          if (queryObj[key] === undefined) {
-              delete queryObj[key];
+
+          if (queryObj[key] === "undefined" || queryObj[key].gte === "undefined"  || queryObj[key].lte === "undefined" || queryObj[key].gt === "undefined" || queryObj[key].lt === "undefined") {
+            return  delete queryObj[key];
           }
+
       });
+
       
 
       //Advance Filtering
       let queryStr = JSON.stringify(queryObj)
       queryStr = JSON.parse(queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`))
+
+
 
       this.query = this.query.find(queryStr)
 
