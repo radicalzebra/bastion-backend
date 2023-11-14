@@ -11,11 +11,13 @@ class ApiFeatures {
       const queryObj = {...this.queryString}
 
       excludedFields.forEach(el => delete queryObj[el])
-      excludedFields.forEach(el => {{
-         if(el===undefined) {
-            return delete queryObj[el]
-         }
-      })
+
+      //implementing so that values with undefined will be ignored
+      Object.keys(queryObj).forEach(key => {
+          if (queryObj[key] === undefined) {
+              delete queryObj[key];
+          }
+      });
       
 
       //Advance Filtering
