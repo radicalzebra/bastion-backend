@@ -11,6 +11,12 @@ class ApiFeatures {
       const queryObj = {...this.queryString}
 
       excludedFields.forEach(el => delete queryObj[el])
+      excludedFields.forEach(el => {{
+         if(el===undefined) {
+            return delete queryObj[el]
+         }
+      })
+      
 
       //Advance Filtering
       let queryStr = JSON.stringify(queryObj)
