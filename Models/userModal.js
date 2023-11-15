@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
       type: String,
       required : [true, "Please provide your gender"],
       enum: {
-         values:["man", "woman"],
+         values:["male", "female"],
          message:"Please enter valid gender"
       }
    },
