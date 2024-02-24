@@ -29,7 +29,7 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
 
-    console.log(origin,"1")
+    // console.log(origin,"1")
   },
   credentials: true
 }));
@@ -40,8 +40,8 @@ app.use((req, res, next) => {
   const allowedOrigins = ['http://localhost:5173', 'https://bastion-dev.netlify.app'];
   const origin = req.headers.origin;
 
-  console.log(req.origin,"2")
-    console.log(req.headers.origin,"3")
+  // console.log(req.origin,"2")
+    // console.log(req.headers.origin,"3")
   
 
   if (allowedOrigins.includes(origin)) {
