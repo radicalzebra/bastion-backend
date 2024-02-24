@@ -22,11 +22,11 @@ const createSendToken = (user,statusCode,res) => {
 
   const cookieOptions = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-    secure:true,
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: 'none',
-    domain: '.netlify.app', // Allow subdomains of netlify.app to access the cookie
-    path: '/' // Make the cookie accessible from the root path
+    // sameSite: 'none',
+    // domain: '.netlify.app', // Allow subdomains of netlify.app to access the cookie
+    // path: '/' // Make the cookie accessible from the root path
   };
 
 
