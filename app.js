@@ -10,9 +10,27 @@ const cookieParser = require(`cookie-parser`);
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
+const cors = require('cors');
 
 
 const app = express();
+
+const allowedOrigins = [
+  'http://localhost:5173', // Add your localhost frontend
+  'https://bastion-dev.netlify.app',    // Add your production frontend
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Check if the origin is in the allowedOrigins array or if it is undefined (e.g., not a cross-origin request)
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 
 app.use((req, res, next) => {
