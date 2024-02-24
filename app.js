@@ -35,7 +35,7 @@ app.use(cors({
 
 app.use((req, res, next) => {
   
-  const allowedOrigins = ['http://localhost:5173', 'http://example.com'];
+  const allowedOrigins = ['http://localhost:5173', 'https://bastion-dev.netlify.app'];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
