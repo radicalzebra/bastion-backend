@@ -120,7 +120,7 @@ exports.updateMe = catchAsync(async (req,res,next)=>{
 
 
   res.status(200).json({
-    status:"succcess",
+    status:"success",
     data:{
       user
     }
@@ -137,7 +137,7 @@ exports.updateCart = catchAsync(async (req,res,next) => {
    })
 
   res.status(200).json({
-    status:"succcess",
+    status:"success",
     data:{
       user
     }
