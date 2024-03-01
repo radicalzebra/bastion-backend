@@ -13,45 +13,17 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require('cors');
 
 
-const app = express();
-
-// const allowedOrigins = [
-//   'http://localhost:5173', // Add your localhost frontend
-//   'https://bastion-dev.netlify.app',    // Add your production frontend
-// ];
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // Check if the origin is in the allowedOrigins array or if it is undefined (e.g., not a cross-origin request)
-//     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-
-//     // console.log(origin,"1")
-//   },
-//   credentials: true
-// }));
+const app = express(); 
 
 
 app.use((req, res, next) => {
-  
-  // const allowedOrigins = ['http://localhost:5173', 'https://bastion-dev.netlify.app'];
-  // const origin = req.headers.origin;
-  
-
-  // if (allowedOrigins.includes(origin)) {
-  //   res.header('Access-Control-Allow-Origin', origin);
-  // }
-  
+    
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
-app.use(cors()); // Enable preflight CORS for all routes
 
 //Middlewares
 if(process.env.NODE_ENV === "development") {
