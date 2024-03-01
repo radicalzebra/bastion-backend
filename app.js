@@ -34,6 +34,7 @@ const app = express();
 //   credentials: true
 // }));
 
+app.options('*', cors()); // Enable preflight CORS for all routes
 
 app.use((req, res, next) => {
   
