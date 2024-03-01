@@ -9,7 +9,6 @@ const productSchema = new mongoose.Schema({
       unique: true,
       trim:true,
       maxLength : [20,"A product name must not exceed 40 characters"],
-      minLength : [7,"A product name must have more than 10 characters"],
       // validate: [validator.isAlpha, "Product name must only contain alphanumeric characters"] //checks if name is alphanumeric only or not
    },
 
