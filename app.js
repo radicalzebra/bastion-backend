@@ -16,13 +16,13 @@ const cors = require('cors');
 const app = express(); 
 
 
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
     
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
 
 
 //Middlewares
@@ -33,6 +33,7 @@ if(process.env.NODE_ENV === "development") {
 
 app.use(express.static(path.join(__dirname,"Public"))); 
 
+app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
@@ -41,9 +42,9 @@ app.use(xss());
 
 
 //Routes
-app.use("/bastion/api/users", cors(), userRouter);
-app.use("/bastion/api/products",cors(), productRouter); 
-app.use("/bastion/api/purchases",cors(), purchaseRouter);
+app.use("/bastion/api/users", userRouter);
+app.use("/bastion/api/products", productRouter); 
+app.use("/bastion/api/purchases", purchaseRouter);
 
 
 app.all("*", (req,res,next)=> {
