@@ -34,7 +34,6 @@ const app = express();
 //   credentials: true
 // }));
 
-app.options('*', cors()); // Enable preflight CORS for all routes
 
 app.use((req, res, next) => {
   
@@ -51,6 +50,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+app.use(cors()); // Enable preflight CORS for all routes
 
 //Middlewares
 if(process.env.NODE_ENV === "development") {
