@@ -32,6 +32,8 @@ if(process.env.NODE_ENV === "development") {
 }
 
 app.use(express.static(path.join(__dirname,"Public"))); 
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
 
 app.use(cors());
 app.use(helmet());
