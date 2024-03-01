@@ -41,9 +41,9 @@ app.use(xss());
 
 
 //Routes
-app.use("/bastion/api/users", userRouter);
-app.use("/bastion/api/products", productRouter); 
-app.use("/bastion/api/purchases", purchaseRouter);
+app.use("/bastion/api/users", cors(), userRouter);
+app.use("/bastion/api/products",cors(), productRouter); 
+app.use("/bastion/api/purchases",cors(), purchaseRouter);
 
 
 app.all("*", (req,res,next)=> {
