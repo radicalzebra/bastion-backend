@@ -32,16 +32,12 @@ exports.createReview = catchAsync(async (req,res,next) => {
 
    if(product.seller._id.equals(req.user._id)) throw next(new MyError("You cannot review your own product",400))
 
-   console.log()
+   console.log("1")
+   
+   req.body.user = req.user._id
+   req.body.product = req.params.productId
 
-   // req.body.user = req.user._id
-   // req.body.product = req.params.productId
-
-   const body  = {
-      ...req.body,
-      user: req.user._id,
-      product: req.params.productId
-   }
+   console.log(req.body,"2")
 
    const review = await Review.create(req.body)
 
