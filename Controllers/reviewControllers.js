@@ -34,8 +34,14 @@ exports.createReview = catchAsync(async (req,res,next) => {
 
    console.log()
 
-   req.body.user = req.user._id
-   req.body.product = req.params.productId
+   // req.body.user = req.user._id
+   // req.body.product = req.params.productId
+
+   const body  = {
+      ...req.body,
+      user: req.user._id,
+      product: req.params.productId
+   }
 
    const review = await Review.create(req.body)
 
