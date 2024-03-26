@@ -115,7 +115,6 @@ exports.protect = catchAsync(async (req,res,next) => {
 
 
 exports.restrictTo = (...roles) => {
-   console.log("pop")
   return (req,res,next) => {
       if(!roles.includes(req.user.role)) next(new MyError("You do not have the right to access this resource",401))
       next()
