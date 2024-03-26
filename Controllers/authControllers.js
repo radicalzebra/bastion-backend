@@ -8,8 +8,7 @@ const crypto = require("crypto");
 
 
 const signToken = (id) => {
-
-  console.log("pppop)
+  
   return jwt.sign({id},process.env.JWT_SECRET,{
       expiresIn : process.env.JWT_EXPIRES_IN
    })
@@ -116,7 +115,7 @@ exports.protect = catchAsync(async (req,res,next) => {
 
 
 exports.restrictTo = (...roles) => {
-   
+   console.log("pop")
   return (req,res,next) => {
       if(!roles.includes(req.user.role)) next(new MyError("You do not have the right to access this resource",401))
       next()
