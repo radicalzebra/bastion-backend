@@ -53,7 +53,7 @@ const sendErrorProd = (err,res) => {
          message: err.message
       });
    } else {
-      console.log("Error 🔥", err)
+      console.log("Error 🔥", err , err.stack)
       
       res.status(500).json({
          status:"error",
