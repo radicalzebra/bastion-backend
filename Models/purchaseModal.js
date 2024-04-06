@@ -19,6 +19,11 @@ const purchaseSchema = new mongoose.Schema({
       type:Number,
       required:[true,"A purchase must have a price"]
    },
+
+   size:{
+      type:Number,
+      required:[true,"A purchase must have a size"]
+   },
    
    createdAt:{
       type:Date,
