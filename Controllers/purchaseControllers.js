@@ -13,7 +13,7 @@ exports.getCheckoutSession = catchAsync(async (req,res,next) => {
    const  product = await Product.findById(req.params.productId)
 
 
-   console.log(product.coverImage,"lll)
+   console.log(product.coverImage,"lll")
    //2) Create checkout session
     const stripee = stripe(process.env.STRIPE_SECRET_KEY)
     const session = await stripee.checkout.sessions.create({
