@@ -18,8 +18,8 @@ exports.getCheckoutSession = catchAsync(async (req,res,next) => {
     const session = await stripee.checkout.sessions.create({
 
         payment_method_types : ["card"],
-        success_url:`${req.protocol}://${req.get('host')}/?product=${req.params.ProductId}&user=${req.user.id}&price=${product.price}`,
-        cancel_url:`${req.protocol}://${req.get("host")}/tour/${undefined}`,
+        success_url:`https://bastion-dev.netlify.app/`,
+        cancel_url:`https://bastion-dev.netlify.app/`,
         customer_email: req.user.email,
         client_reference_id: req.params.ProductId,
         mode:"payment",
@@ -27,12 +27,12 @@ exports.getCheckoutSession = catchAsync(async (req,res,next) => {
             {
               quantity: 1,
               price_data: {
-                currency: 'usd',
+                currency: 'inr',
                 unit_amount: product.price * 100,
                 product_data: {
                   name: product.name,
                   description: product.description,
-                  images: [`Public/Images/Products/${product.coverImage}`],
+                  images: [`${product.coverImage}`],
                 },
               },
             },
