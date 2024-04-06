@@ -45,7 +45,8 @@ exports.getCheckoutSession = catchAsync(async (req,res,next) => {
      const purchase = await Purchase.create({
          product:product._id,
          user:req.user._id,
-         price:product.price
+         price:product.price,
+         size:req.body.size
       });
 
 
