@@ -33,7 +33,7 @@ exports.getCheckoutSession = catchAsync(async (req,res,next) => {
                 product_data: {
                   name: product.name,
                   description: product.description,
-                  images: [product.coverImage],
+                  // images: [product.coverImage],
                 },
               },
             },
