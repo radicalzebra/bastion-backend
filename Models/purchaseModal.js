@@ -38,7 +38,7 @@ purchaseSchema.pre("find", function(next) {
       select:"username email"
    }).populate({
       path:"product",
-      select:"name"
+      select:"name consumer"
    })
 
    next()
