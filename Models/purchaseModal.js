@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const Product = require("./")
+const Product = require("./productModal")
+
 const purchaseSchema = new mongoose.Schema({
 
    product:{
