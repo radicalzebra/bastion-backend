@@ -114,7 +114,7 @@ const productSchema = new mongoose.Schema({
       ref:"Users"
    },
 
-   sold : {
+   soldNum : {
       type:Number,
       default:0
    }
