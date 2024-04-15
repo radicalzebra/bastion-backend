@@ -112,6 +112,11 @@ const productSchema = new mongoose.Schema({
    seller: {
       type:mongoose.Schema.ObjectId,
       ref:"Users"
+   },
+
+   sold : {
+      type:Number,
+      default:0
    }
 
 },{
