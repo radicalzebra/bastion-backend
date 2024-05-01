@@ -11,12 +11,12 @@ router.route("/")
 .get(productControllers.getAllProducts)
 .post(authControllers.protect,authControllers.restrictTo("seller"),productControllers.createProduct)
 
-router.use("/:productId/reviews", reviewRouter)
+// router.use("/:productId/reviews", reviewRouter)
 
 router.route("/:id")
 .get(productControllers.getProduct)
 .patch(authControllers.protect,authControllers.restrictTo("seller"),productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.updateProduct)
-.delete(authControllers.protect,productControllers.check,productControllers.deleteProduct)
+.delete(authControllers.protect,productControllers.deleteProduct)
 
 
 
