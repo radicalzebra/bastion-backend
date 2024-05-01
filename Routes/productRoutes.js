@@ -15,7 +15,7 @@ router.use("/:productId/reviews", reviewRouter)
 
 router.route("/:id")
 .get(productControllers.getProduct)
-.patch(authControllers.protect,authControllers.restrictTo("seller"),productControllers.check,productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.updateProduct)
+.patch(authControllers.protect,authControllers.restrictTo("seller"),productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.updateProduct)
 .delete(authControllers.protect,productControllers.check,productControllers.deleteProduct)
 
 
