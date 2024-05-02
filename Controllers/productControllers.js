@@ -30,17 +30,18 @@ exports.uploadProductImages = upload.fields([
 
 exports.resizeProductImages = catchAsync(async (req,res,next) => {
 
-   if (!req.files.coverImage || !req.files.images) {
-      console.log("yoooooo its here")
-      return next();
-   }
+   if (!req.files.coverImage || !req.files.images) return next();
+   
 
+   console.log(req,"1")
 
    // coverImage
    req.body.coverImage = `product-${req.params.id}-${Date.now()}-cover.jpeg`
    await sharp(req.files.coverImage[0].buffer).resize(2000,1500)
                                .toFormat("jpeg")
                                .jpeg({quality:90})
+
+   
 
    //upload to firebase 
    const imageRef = ref(storage,`images/products/${req.body.coverImage}`)
@@ -58,6 +59,7 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
    req.body.coverImage = coverImage
  
 
+   console.log(coverImage,"2")
    
    //Images
    req.body.images = [];
@@ -83,6 +85,9 @@ exports.resizeProductImages = catchAsync(async (req,res,next) => {
       req.body.images.push(productImage)
  
    }))
+
+   console.log(req.body.images,"3")
+   
 
 
    next()
