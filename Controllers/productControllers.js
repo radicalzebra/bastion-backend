@@ -30,7 +30,10 @@ exports.uploadProductImages = upload.fields([
 
 exports.resizeProductImages = catchAsync(async (req,res,next) => {
 
-   if (!req.files.coverImage || !req.files.images) return next();
+   if (!req.files.coverImage || !req.files.images) {
+      console.log("yoooooo its here")
+      return next();
+   }
 
 
    // coverImage
