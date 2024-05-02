@@ -6,7 +6,8 @@ const reviewRouter = require("../Routes/reviewRoutes")
 
 const router = express.Router();
 
-// the two post and patch route handlers are commented because there was some problem with the img processing and was unable to diagnose the problem
+/** the two post and patch route handlers are commented because there was some problem with the img processing and was unable to diagnose the problem
+and the image is not being sent to my firebase storage but saved as it is, same case with user image update in userRoutes*/
 
 router.route("/")
 .get(productControllers.getAllProducts)
