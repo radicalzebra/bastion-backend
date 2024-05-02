@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route("/")
 .get(productControllers.getAllProducts)
-.post(authControllers.protect,authControllers.restrictTo("seller"),productControllers.uploadProductImages,productControllers.createProduct)
+.post(authControllers.protect,authControllers.restrictTo("seller"),productControllers.uploadProductImages,productControllers.resizeProductImages,productControllers.createProduct)
 
 router.use("/:productId/reviews", reviewRouter)
 
